@@ -1,35 +1,26 @@
-name: GitHub Actions Test Run
+name: Node.js App Test
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+on: [push, pull_request]
 
 jobs:
-  test-and-build:
+  test:
     runs-on: ubuntu-latest
-    
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Run Test Check
-        run: |
-          echo "Running unit tests..."
-          echo "All tests passed successfully!"
-
-      - name: Build Application
-        run: |
-          echo "Compiling code and building project artifacts..."
-          mkdir output
-          echo "Built successfully at $(date)" > output/build-log.txt
-
-      - name: Save Build Output
-        uses: actions/upload-artifact@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          name: demo-build-artifact
-          path: output/
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm install  # Or 'npm ci' if you have a package-lock.json
+
+      - name: Run App Tests
+        run: npm test
+
 
 
 
