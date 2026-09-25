@@ -15,13 +15,21 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Check for package.json
+        shell: bash
+        run: |
+          if [ ! -f package.json ]; then
+            echo "No package.json found. Skipping npm install and npm test."
+            exit 0
+          fi
+
       - name: Install dependencies
-        run: npm install  # Or 'npm ci' if you have a package-lock.json
+        if: hashFiles('package.json') != ''
+        run: npm install
 
       - name: Run App Tests
+        if: hashFiles('package.json') != ''
         run: npm test
-
-
 
 
 
